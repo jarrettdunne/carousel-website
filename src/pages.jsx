@@ -29,6 +29,79 @@ const aboutSlides = [
   },
 ]
 
+// Marks for the portfolio's fictional clients, one line-drawn emblem
+// each: a globe for the cartographers, a kiln arch for the ceramicists,
+// ruled columns for the bookkeepers, an iris for the photographers, a
+// feather for the birders, and a rising sun for the perfumers.
+function ProjectLogo({ children }) {
+  return (
+    <svg
+      className="project-logo"
+      viewBox="0 0 64 64"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {children}
+    </svg>
+  )
+}
+
+const logos = {
+  meridian: (
+    <ProjectLogo>
+      <circle cx="32" cy="32" r="22" />
+      <ellipse cx="32" cy="32" rx="10" ry="22" />
+      <line x1="10" y1="32" x2="54" y2="32" />
+    </ProjectLogo>
+  ),
+  hearth: (
+    <ProjectLogo>
+      <path d="M17 52 V36 A15 15 0 0 1 47 36 V52" />
+      <line x1="12" y1="52" x2="52" y2="52" />
+      <circle cx="32" cy="44" r="2.5" fill="currentColor" stroke="none" />
+    </ProjectLogo>
+  ),
+  ledger: (
+    <ProjectLogo>
+      <line x1="14" y1="21" x2="50" y2="21" />
+      <line x1="14" y1="32" x2="50" y2="32" />
+      <line x1="14" y1="43" x2="50" y2="43" />
+      <line x1="26" y1="14" x2="26" y2="50" />
+    </ProjectLogo>
+  ),
+  aperture: (
+    <ProjectLogo>
+      {/* viewfinder: corner brackets around a lens dot */}
+      <path d="M12 22 V12 H22" />
+      <path d="M42 12 H52 V22" />
+      <path d="M52 42 V52 H42" />
+      <path d="M22 52 H12 V42" />
+      <circle cx="32" cy="32" r="6" />
+      <circle cx="32" cy="32" r="1.5" fill="currentColor" stroke="none" />
+    </ProjectLogo>
+  ),
+  fieldnote: (
+    <ProjectLogo>
+      <path d="M42 12 C 29 17 21 33 20 50" />
+      <path d="M42 12 C 47 27 38 43 20 50" />
+      <line x1="27" y1="39" x2="36" y2="36" />
+      <line x1="31" y1="29" x2="40" y2="26" />
+    </ProjectLogo>
+  ),
+  solstice: (
+    <ProjectLogo>
+      {/* perfume flacon: round body, square neck, bead stopper */}
+      <circle cx="32" cy="40" r="14" />
+      <path d="M28 27 V17 H36 V27" />
+      <circle cx="32" cy="12" r="3" />
+    </ProjectLogo>
+  ),
+}
+
 const portfolioSlides = [
   {
     kicker: 'Selected Work',
@@ -37,31 +110,37 @@ const portfolioSlides = [
     intro: true,
   },
   {
+    logo: logos.meridian,
     kicker: 'Identity & Web',
     title: 'Meridian',
     text: 'A complete identity and web presence for a cartography startup. The wordmark, the grid, and the site itself all borrow from the discipline of charts: fixed bearings, honest scale, and no ornament that does not navigate.',
   },
   {
+    logo: logos.hearth,
     kicker: 'Brand & Packaging',
     title: 'Hearth',
     text: 'Brand and packaging for a ceramics studio in the Hudson Valley. We built the identity around the kiln itself: warm neutrals, imperfect edges, and a mark that shifts slightly with every print run, the way no two firings are alike.',
   },
   {
+    logo: logos.ledger,
     kicker: 'Product Design',
     title: 'Ledger',
     text: 'An interface overhaul for a bookkeeping platform drowning in its own features. We cut the primary navigation from eleven items to four, rebuilt the data views around what accountants actually scan for, and drew a type system that keeps dense tables legible at a glance. Support tickets about finding things fell by half within a quarter.',
   },
   {
+    logo: logos.aperture,
     kicker: 'Exhibition',
     title: 'Aperture',
     text: 'Exhibition design and catalogue for a photography retrospective. Two hundred images across four rooms, sequenced so the story built rather than blurred. We treated the floor plan as an edit, not a hang.',
   },
   {
+    logo: logos.fieldnote,
     kicker: 'Naming & App',
     title: 'Fieldnote',
     text: 'Naming, identity, and app design for a birding journal that wanted to feel like a pocket notebook rather than a database. Ink lines, paper textures, and not a single notification.',
   },
   {
+    logo: logos.solstice,
     kicker: 'Identity & Packaging',
     title: 'Solstice',
     text: 'Identity and packaging for a small perfume house. Two ideas carried everything: light at its longest, and restraint at its most fragrant. Blind emboss, cotton paper, and a bottle that reads as well on a shelf as it does in the hand.',

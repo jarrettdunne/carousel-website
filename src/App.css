@@ -26,6 +26,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* if content ever outgrows the slide, pin the top instead of
+     clipping it on both ends (falls back to plain center above) */
+  justify-content: safe center;
   align-items: center;
   padding: 2rem;
   text-align: left;
@@ -42,9 +45,27 @@
   max-width: 40rem;
 }
 
+/* Compact vertical rhythm: margins between flex items don't collapse,
+   and the taller pages (Home, Contact) must fit one viewport-height
+   slide with no scrolling. */
+.embla-v__slide h1,
+.embla-h__slide h1 {
+  margin: 0.25rem 0 1rem;
+}
+
+.embla-h__slide h3 {
+  margin: 0.25rem 0 0.75rem;
+}
+
+.embla-v__slide p,
+.embla-h__slide p {
+  margin: 0.5rem 0;
+}
+
 /* Small labels above headings and the services line; the only styled
-   text besides the logo, kept quiet. */
-.slide-kicker {
+   text besides the logo, kept quiet. Qualified with the element so their
+   margins outrank the slide paragraph rhythm above. */
+p.slide-kicker {
   margin: 0 0 0.25rem;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -52,12 +73,21 @@
   color: #999;
 }
 
-.services-line {
-  margin-top: 1.5rem;
+p.services-line {
+  margin: 1.5rem 0 0;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--ink-soft);
+}
+
+/* Line-drawn marks for the portfolio's fictional clients */
+.project-logo {
+  display: block;
+  width: 4.5rem;
+  height: auto;
+  margin-bottom: 1rem;
+  color: var(--ink);
 }
 
 /* Landing page */
@@ -79,8 +109,8 @@
   color: var(--ink);
 }
 
-.landing-hint {
-  margin-top: 2.5rem;
+p.landing-hint {
+  margin: 2.5rem 0 0;
   font-size: 0.85rem;
   color: #999;
   /* stays centered under the wordmark */
@@ -241,6 +271,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  justify-content: safe center;
   align-items: center;
   padding: 2rem;
   margin-right: 1rem;
@@ -277,8 +308,8 @@
   max-width: 40rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin: 1.5rem 0;
+  gap: 0.6rem;
+  margin: 1rem 0;
   text-align: left;
 }
 

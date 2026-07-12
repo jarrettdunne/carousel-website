@@ -114,17 +114,17 @@
 }
 
 .page-dial__strip {
-  --dial-step-h: 9rem;
+  --dial-gap-h: 1.5rem;
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
   display: flex;
+  gap: var(--dial-gap-h);
   white-space: nowrap;
 }
 
 .page-dial__strip-item {
-  width: var(--dial-step-h);
   text-align: center;
 }
 

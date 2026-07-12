@@ -1,43 +1,62 @@
 import { createPortal } from 'react-dom'
 
-// Full-screen blur overlay listing a carousel's index names like a dial.
+// Full-screen blur overlay listing the page names like a dial. A row may
+// carry a `strip` — the horizontal carousel of that page — rendered as a
+// horizontal dial of titles inline, in place of the page's name.
 // Rendered in a portal: an Embla container's transform would otherwise
 // hijack position:fixed and pin the overlay to the wrong page.
-function DialOverlay({ names, dial, horizontal = false }) {
-  const offset = `calc((${(names.length - 1) / 2} - ${dial.position}) * var(--dial-step))`
+function DialOverlay({ rows, dial }) {
+  const offset = `calc((${(rows.length - 1) / 2} - ${dial.position}) * var(--dial-step))`
   return createPortal(
     <div
-      className={
-        'page-dial' +
-        (horizontal ? ' page-dial--h' : '') +
-        (dial.visible ? ' page-dial--visible' : '')
-      }
+      className={'page-dial' + (dial.visible ? ' page-dial--visible' : '')}
       aria-hidden="true"
     >
       <div
         className="page-dial__track"
-        style={{
-          transform: horizontal
-            ? `translateX(${offset})`
-            : `translateY(${offset})`,
-        }}
+        style={{ transform: `translateY(${offset})` }}
       >
-        {names.map((name, i) => {
+        {rows.map((row, i) => {
           const distance = Math.min(Math.abs(i - dial.position), 2)
-          // Horizontal steps are tighter, so recede neighbors harder to
-          // keep long titles from colliding with the enlarged one.
-          const fade = horizontal ? 0.45 : 0.4
-          const shrink = horizontal ? 0.35 : 0.2
+          const style = {
+            opacity: 1 - distance * 0.4,
+            transform: `scale(${1 - distance * 0.2})`,
+          }
+          if (!row.strip) {
+            return (
+              <span key={row.key} className="page-dial__item" style={style}>
+                {row.label}
+              </span>
+            )
+          }
           return (
             <span
-              key={name}
-              className="page-dial__item"
-              style={{
-                opacity: 1 - distance * fade,
-                transform: `scale(${1 - distance * shrink})`,
-              }}
+              key={row.key}
+              className="page-dial__item page-dial__item--strip"
+              style={style}
             >
-              {name}
+              <span
+                className="page-dial__strip"
+                style={{
+                  transform: `translateX(calc(${-(row.strip.position + 0.5)} * var(--dial-step-h)))`,
+                }}
+              >
+                {row.strip.names.map((name, j) => {
+                  const d = Math.min(Math.abs(j - row.strip.position), 2)
+                  return (
+                    <span
+                      key={name}
+                      className="page-dial__strip-item"
+                      style={{
+                        opacity: 1 - d * 0.45,
+                        transform: `scale(${1 - d * 0.35})`,
+                      }}
+                    >
+                      {name}
+                    </span>
+                  )
+                })}
+              </span>
             </span>
           )
         })}

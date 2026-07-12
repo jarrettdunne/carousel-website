@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
-import DialOverlay from './DialOverlay'
-import { useDialScroll } from '../useDialScroll'
+import { registerHCarousel } from '../dialRegistry'
 
 function HorizontalCarousel({ slides }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'x', skipSnaps: true })
+  // Native dragging is off: the combined dial gesture in App drives this
+  // carousel from the horizontal movement of the same touch that flips
+  // the vertical pages (see useHorizontalDialGesture).
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'x', watchDrag: false })
   const [selected, setSelected] = useState(0)
-  const dial = useDialScroll(emblaApi, slides.length)
 
   useEffect(() => {
     if (!emblaApi) return
@@ -14,6 +15,14 @@ function HorizontalCarousel({ slides }) {
     emblaApi.on('select', onSelect)
     return () => emblaApi.off('select', onSelect)
   }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    return registerHCarousel({
+      emblaApi,
+      names: slides.map((slide) => slide.title),
+    })
+  }, [emblaApi, slides])
 
   return (
     <div className="embla-h">
@@ -38,11 +47,6 @@ function HorizontalCarousel({ slides }) {
           />
         ))}
       </nav>
-      <DialOverlay
-        names={slides.map((slide) => slide.title)}
-        dial={dial}
-        horizontal
-      />
     </div>
   )
 }

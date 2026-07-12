@@ -4,13 +4,21 @@ import { useEffect, useState } from 'react'
 // horizontal carousels: drag distance is amplified, and while dragging a
 // blur overlay (rendered by DialOverlay) shows the index names, holding
 // on each one before ticking to the next.
-const DRAG_MULTIPLIER = 10
+export const DRAG_MULTIPLIER = 10
 // Fraction of the way to the neighboring index the dial stays pinned on
 // each side; the remaining middle span is a quick smoothstep transition.
 const HOLD = 0.2
 // Don't show the overlay on mere touch — wait until the carousel has
 // moved this many indices from where the finger went down.
 const SHOW_THRESHOLD = 0.1
+
+// Hold on each index, then tick to the next.
+export function detent(p) {
+  const page = Math.floor(p)
+  const t = p - page
+  const u = Math.min(Math.max((t - HOLD) / (1 - 2 * HOLD), 0), 1)
+  return page + u * u * (3 - 2 * u)
+}
 
 export function useDialScroll(emblaApi, count) {
   const [dial, setDial] = useState({ visible: false, position: 0 })
@@ -19,12 +27,6 @@ export function useDialScroll(emblaApi, count) {
   // the detent curve; hide the moment the pointer lifts.
   useEffect(() => {
     if (!emblaApi || count < 2) return
-    const detent = (p) => {
-      const page = Math.floor(p)
-      const t = p - page
-      const u = Math.min(Math.max((t - HOLD) / (1 - 2 * HOLD), 0), 1)
-      return page + u * u * (3 - 2 * u)
-    }
     const raw = () => emblaApi.scrollProgress() * (count - 1)
     let downPosition = null
     const onPointerDown = () => {

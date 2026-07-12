@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import DialOverlay from './components/DialOverlay'
-import { useDialScroll } from './useDialScroll'
+import { useDialScroll, detent } from './useDialScroll'
+import { entryForSlide } from './dialRegistry'
+import { useHorizontalDialGesture } from './useHorizontalDialGesture'
 import { pages } from './pages'
 import './App.css'
 
@@ -9,6 +11,9 @@ function App() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', skipSnaps: true })
   const [selected, setSelected] = useState(0)
   const dial = useDialScroll(emblaApi, pages.length)
+  const vEngagedRef = useRef(false)
+  vEngagedRef.current = dial.visible
+  const hDial = useHorizontalDialGesture(emblaApi, vEngagedRef)
 
   useEffect(() => {
     if (!emblaApi) return
@@ -74,8 +79,22 @@ function App() {
         ))}
       </nav>
       <DialOverlay
-        names={pages.map((page) => page.dial ?? page.name)}
-        dial={dial}
+        rows={pages.map((page, i) => {
+          const row = { key: page.name, label: page.dial ?? page.name }
+          const entry = emblaApi && entryForSlide(emblaApi.slideNodes()[i])
+          if (entry) {
+            const count = entry.emblaApi.scrollSnapList().length
+            row.strip = {
+              names: entry.names,
+              position: detent(entry.emblaApi.scrollProgress() * (count - 1)),
+            }
+          }
+          return row
+        })}
+        dial={{
+          visible: dial.visible || hDial.visible,
+          position: dial.visible ? dial.position : selected,
+        }}
       />
     </div>
   )

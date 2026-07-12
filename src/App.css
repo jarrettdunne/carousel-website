@@ -213,15 +213,22 @@ p.landing-hint {
   height: 100%;
   width: 50vw;
   overflow: hidden;
+  /* The short left fade hides sub-pixel slivers of the previous name:
+     it rests only ~1.6px past the hard edge (gap minus the strip's
+     0.45em padding), inside offsetLeft rounding error on zoomed or
+     fractional-DPR displays. The fade must stay shorter than that
+     0.45em so the focused name is never touched. */
   -webkit-mask-image: linear-gradient(
     to right,
-    #000 0,
+    transparent,
+    #000 0.3em,
     #000 calc(100% - 3rem),
     transparent
   );
   mask-image: linear-gradient(
     to right,
-    #000 0,
+    transparent,
+    #000 0.3em,
     #000 calc(100% - 3rem),
     transparent
   );

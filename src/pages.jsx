@@ -30,9 +30,10 @@ const aboutSlides = [
 ]
 
 // Marks for the portfolio's fictional clients, one line-drawn emblem
-// each: a globe for the cartographers, a kiln arch for the ceramicists,
-// ruled columns for the bookkeepers, an iris for the photographers, a
-// feather for the birders, and a rising sun for the perfumers.
+// each: a compass rose for the cartographers, a kiln arch for the
+// ceramicists, ruled columns for the bookkeepers, a viewfinder for the
+// photographers, a feather for the birders, and an eclipse for the
+// perfumers.
 function ProjectLogo({ children }) {
   return (
     <svg
@@ -53,16 +54,18 @@ function ProjectLogo({ children }) {
 const logos = {
   meridian: (
     <ProjectLogo>
-      <circle cx="32" cy="32" r="22" />
-      <ellipse cx="32" cy="32" rx="10" ry="22" />
-      <line x1="10" y1="32" x2="54" y2="32" />
+      {/* compass rose: four-point star, center pin, north tick */}
+      <path d="M32 10 L36 28 L54 32 L36 36 L32 54 L28 36 L10 32 L28 28 Z" />
+      <circle cx="32" cy="32" r="2" fill="currentColor" stroke="none" />
+      <line x1="32" y1="6" x2="32" y2="2" />
     </ProjectLogo>
   ),
   hearth: (
     <ProjectLogo>
-      <path d="M17 52 V36 A15 15 0 0 1 47 36 V52" />
-      <line x1="12" y1="52" x2="52" y2="52" />
-      <circle cx="32" cy="44" r="2.5" fill="currentColor" stroke="none" />
+      {/* thrown bowl: open rim, round belly, small foot */}
+      <ellipse cx="32" cy="22" rx="18" ry="5" />
+      <path d="M14 22 A18 20 0 0 0 50 22" />
+      <line x1="27" y1="47" x2="37" y2="47" />
     </ProjectLogo>
   ),
   ledger: (
@@ -94,10 +97,9 @@ const logos = {
   ),
   solstice: (
     <ProjectLogo>
-      {/* perfume flacon: round body, square neck, bead stopper */}
-      <circle cx="32" cy="40" r="14" />
-      <path d="M28 27 V17 H36 V27" />
-      <circle cx="32" cy="12" r="3" />
+      {/* eclipse: full disc kissing a hairline ring, light at its longest */}
+      <circle cx="26" cy="38" r="12" fill="currentColor" stroke="none" />
+      <circle cx="40" cy="24" r="12" />
     </ProjectLogo>
   ),
 }

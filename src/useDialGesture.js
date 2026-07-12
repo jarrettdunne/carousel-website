@@ -17,21 +17,40 @@ export function useDialGesture(emblaApi) {
     if (!emblaApi) return
     const root = emblaApi.rootNode()
 
-    const drive = (api, delta) => {
-      const engine = api.internalEngine()
-      const next = engine.limit.constrain(
-        engine.location.get() + delta * DRAG_MULTIPLIER
-      )
-      engine.location.set(next)
-      engine.target.set(next)
-      engine.offsetLocation.set(next)
-      engine.translate.to(next)
+    // The slides move through the same detent as the dial rows: the raw
+    // finger position accumulates per carousel, while the rendered
+    // location holds on the nearest snap and ticks over with detent().
+    const raw = new Map()
+
+    const indexAt = (engine, loc) => {
+      const snaps = engine.scrollSnaps
+      return snaps.length > 1 ? (loc - snaps[0]) / (snaps[1] - snaps[0]) : 0
     }
 
+    const drive = (api, delta) => {
+      const engine = api.internalEngine()
+      const prev = raw.has(api) ? raw.get(api) : engine.location.get()
+      const next = engine.limit.constrain(prev + delta * DRAG_MULTIPLIER)
+      raw.set(api, next)
+      const snaps = engine.scrollSnaps
+      let display = next
+      if (snaps.length > 1) {
+        const step = snaps[1] - snaps[0]
+        display = snaps[0] + detent(indexAt(engine, next)) * step
+      }
+      engine.location.set(display)
+      engine.target.set(display)
+      engine.offsetLocation.set(display)
+      engine.translate.to(display)
+    }
+
+    // Positions derive from the raw (undetented) location so the dial's
+    // own detent, the show threshold, and settling all see the finger.
     const positionOf = (api) => {
+      const engine = api.internalEngine()
+      const loc = raw.has(api) ? raw.get(api) : engine.location.get()
       const count = api.scrollSnapList().length
-      const progress = Math.min(Math.max(api.scrollProgress(), 0), 1)
-      return progress * (count - 1)
+      return Math.min(Math.max(indexAt(engine, loc), 0), count - 1)
     }
 
     const settle = (api) => api.scrollTo(Math.round(positionOf(api)))
@@ -52,6 +71,7 @@ export function useDialGesture(emblaApi) {
       // leave form fields and buttons to their own devices
       if (e.target.closest('input, textarea, select, button')) return
       last = { x: e.clientX, y: e.clientY }
+      raw.clear()
       vStart = positionOf(emblaApi)
       vShown = false
       movedH = 0
@@ -95,6 +115,7 @@ export function useDialGesture(emblaApi) {
       last = null
       driven.forEach(settle)
       driven.clear()
+      raw.clear()
       active = null
       setVDial((d) => ({ ...d, visible: false }))
       setHDial((d) => ({ ...d, visible: false }))

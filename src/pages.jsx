@@ -10,6 +10,7 @@ const lorem = {
 }
 
 const aboutSlides = [
+  { title: 'About', text: lorem.short, intro: true },
   { title: 'Who We Are', text: lorem.short },
   { title: 'Our Story', text: lorem.medium },
   { title: 'Our Values', text: lorem.long },
@@ -17,6 +18,7 @@ const aboutSlides = [
 ]
 
 const portfolioSlides = [
+  { title: 'Portfolio', text: lorem.short, intro: true },
   { title: 'Project One', text: lorem.short },
   { title: 'Project Two', text: lorem.medium },
   { title: 'Project Three', text: lorem.long },
@@ -37,23 +39,11 @@ export const pages = [
   },
   {
     name: 'About',
-    content: (
-      <>
-        <h1>About</h1>
-        <p>{lorem.short}</p>
-        <HorizontalCarousel slides={aboutSlides} />
-      </>
-    ),
+    content: <HorizontalCarousel slides={aboutSlides} />,
   },
   {
     name: 'Portfolio',
-    content: (
-      <>
-        <h1>Portfolio</h1>
-        <p>{lorem.short}</p>
-        <HorizontalCarousel slides={portfolioSlides} />
-      </>
-    ),
+    content: <HorizontalCarousel slides={portfolioSlides} />,
   },
   {
     name: 'Contact',

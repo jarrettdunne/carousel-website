@@ -99,15 +99,15 @@
   text-align: center;
 }
 
-/* Horizontal carousels inside pages — bleed to the full page slide,
-   cancelling the slide's 2rem padding on the sides and bottom */
+/* Horizontal carousels inside pages — the page's only content, bleeding
+   over the slide's 2rem padding so they span the whole page */
 .embla-h {
   flex: 1;
   min-height: 0;
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  margin: 1.5rem -2rem -2rem;
+  margin: -2rem;
 }
 
 .embla-h__viewport {
@@ -131,8 +131,6 @@
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   margin-right: 1rem;
 }
 
@@ -144,7 +142,7 @@
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-  margin: 0.75rem 0;
+  margin: 0.75rem 0 1rem;
 }
 
 .embla-h__dots button,

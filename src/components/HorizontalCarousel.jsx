@@ -21,7 +21,7 @@ function HorizontalCarousel({ slides }) {
         <div className="embla-h__container">
           {slides.map((slide, i) => (
             <div className="embla-h__slide" key={i}>
-              <h3>{slide.title}</h3>
+              {slide.intro ? <h1>{slide.title}</h1> : <h3>{slide.title}</h3>}
               <p>{slide.text}</p>
             </div>
           ))}

@@ -5,7 +5,7 @@ import { pages } from './pages'
 import './App.css'
 
 function App() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y' }, [
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', skipSnaps: true }, [
     WheelGesturesPlugin(),
   ])
   const [selected, setSelected] = useState(0)
@@ -77,6 +77,45 @@ function App() {
       root.removeEventListener('touchstart', onTouchStart)
       root.removeEventListener('touchmove', onTouchMove)
       root.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [emblaApi])
+
+  // Amplify drag distance so flipping pages feels like spinning a dial:
+  // every finger-move while the pointer is down is scaled by this factor
+  // (clamped at the first/last page so it can't overshoot the bounds).
+  useEffect(() => {
+    if (!emblaApi) return
+    const DRAG_MULTIPLIER = 2.5
+    const engine = emblaApi.internalEngine()
+    let prev = null
+    const onPointerDown = () => {
+      prev = engine.location.get()
+    }
+    const onPointerUp = () => {
+      prev = null
+    }
+    const onScroll = () => {
+      if (prev === null || !engine.dragHandler.pointerDown()) return
+      const current = engine.location.get()
+      const boosted = engine.limit.constrain(
+        prev + (current - prev) * DRAG_MULTIPLIER
+      )
+      const extra = boosted - current
+      if (extra !== 0) {
+        engine.location.add(extra)
+        engine.target.add(extra)
+        engine.offsetLocation.set(engine.location.get())
+        engine.translate.to(engine.offsetLocation.get())
+      }
+      prev = engine.location.get()
+    }
+    emblaApi.on('pointerDown', onPointerDown)
+    emblaApi.on('pointerUp', onPointerUp)
+    emblaApi.on('scroll', onScroll)
+    return () => {
+      emblaApi.off('pointerDown', onPointerDown)
+      emblaApi.off('pointerUp', onPointerUp)
+      emblaApi.off('scroll', onScroll)
     }
   }, [emblaApi])
 

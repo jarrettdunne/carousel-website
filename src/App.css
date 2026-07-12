@@ -1,0 +1,98 @@
+/* Vertical page carousel */
+.embla-v {
+  height: 100vh;
+  height: 100svh;
+}
+
+.embla-v__viewport {
+  height: 100%;
+  overflow: hidden;
+}
+
+.embla-v__container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.embla-v__slide {
+  flex: 0 0 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.embla-v__slide p {
+  max-width: 40rem;
+}
+
+/* Page nav (fixed on the right) */
+.page-nav {
+  position: fixed;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.page-nav button {
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.page-nav button.active {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+
+/* Horizontal carousels inside pages */
+.embla-h {
+  width: 100%;
+  max-width: 44rem;
+  margin-top: 1.5rem;
+}
+
+.embla-h__viewport {
+  overflow: hidden;
+}
+
+.embla-h__container {
+  display: flex;
+}
+
+.embla-h__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-right: 1rem;
+}
+
+.embla-h__buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.embla-h__buttons button {
+  font: inherit;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}

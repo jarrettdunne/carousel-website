@@ -4,11 +4,8 @@ import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { pages } from './pages'
 import './App.css'
 
-// Drags that start inside a horizontal carousel shouldn't move the vertical one
-const watchDrag = (emblaApi, event) => !event.target.closest('.embla-h')
-
 function App() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', watchDrag }, [
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y' }, [
     WheelGesturesPlugin(),
   ])
   const [selected, setSelected] = useState(0)

@@ -57,28 +57,42 @@
   border-color: #222;
 }
 
-/* Horizontal carousels inside pages */
+/* Horizontal carousels inside pages — fill the whole page slide */
 .embla-h {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  max-width: 44rem;
+  display: flex;
+  flex-direction: column;
   margin-top: 1.5rem;
 }
 
 .embla-h__viewport {
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .embla-h__container {
   display: flex;
+  height: 100%;
 }
 
 .embla-h__slide {
   flex: 0 0 100%;
   min-width: 0;
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-right: 1rem;
+}
+
+.embla-h__slide p {
+  max-width: 40rem;
 }
 
 .embla-h__buttons {

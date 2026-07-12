@@ -105,7 +105,7 @@ const logos = {
 const portfolioSlides = [
   {
     kicker: 'Selected Work',
-    title: 'Portfolio',
+    title: 'Projects',
     text: 'A few recent commissions. Each began with a question worth answering; the design followed from there.',
     intro: true,
   },

@@ -213,6 +213,9 @@ p.landing-hint {
   height: 100%;
   width: 50vw;
   overflow: hidden;
+  /* iOS Safari mis-clips transformed children of an overflow:hidden
+     box unless it gets its own compositing layer */
+  transform: translateZ(0);
   /* The short left fade hides sub-pixel slivers of the previous name:
      it rests only ~1.6px past the hard edge (gap minus the strip's
      0.45em padding), inside offsetLeft rounding error on zoomed or

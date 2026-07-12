@@ -35,7 +35,7 @@ export const pages = [
         <p className="landing-kicker">Lorem ipsum dolor</p>
         <h1 className="landing-title">Sit Amet Consectetur</h1>
         <p>{lorem.short}</p>
-        <p className="landing-hint">Scroll to explore \u2193</p>
+        <p className="landing-hint">Scroll to explore.</p>
       </>
     ),
   },

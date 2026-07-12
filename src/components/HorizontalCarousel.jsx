@@ -1,7 +1,19 @@
+import { useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
+import DialOverlay from './DialOverlay'
+import { useDialScroll } from '../useDialScroll'
 
 function HorizontalCarousel({ slides }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'x' })
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'x', skipSnaps: true })
+  const [selected, setSelected] = useState(0)
+  const dial = useDialScroll(emblaApi, slides.length)
+
+  useEffect(() => {
+    if (!emblaApi) return
+    const onSelect = () => setSelected(emblaApi.selectedScrollSnap())
+    emblaApi.on('select', onSelect)
+    return () => emblaApi.off('select', onSelect)
+  }, [emblaApi])
 
   return (
     <div className="embla-h">
@@ -15,10 +27,22 @@ function HorizontalCarousel({ slides }) {
           ))}
         </div>
       </div>
-      <div className="embla-h__buttons">
-        <button onClick={() => emblaApi && emblaApi.scrollPrev()}>&larr;</button>
-        <button onClick={() => emblaApi && emblaApi.scrollNext()}>&rarr;</button>
-      </div>
+      <nav className="embla-h__dots">
+        {slides.map((slide, i) => (
+          <button
+            key={i}
+            className={i === selected ? 'active' : ''}
+            onClick={() => emblaApi && emblaApi.scrollTo(i)}
+            aria-label={slide.title}
+            aria-current={i === selected ? 'true' : undefined}
+          />
+        ))}
+      </nav>
+      <DialOverlay
+        names={slides.map((slide) => slide.title)}
+        dial={dial}
+        horizontal
+      />
     </div>
   )
 }

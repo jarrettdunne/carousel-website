@@ -1,102 +1,20 @@
 import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
+import DialOverlay from './components/DialOverlay'
+import { useDialScroll } from './useDialScroll'
 import { pages } from './pages'
 import './App.css'
 
 function App() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', skipSnaps: true })
   const [selected, setSelected] = useState(0)
-  const [dial, setDial] = useState({ visible: false, position: 0 })
+  const dial = useDialScroll(emblaApi, pages.length)
 
   useEffect(() => {
     if (!emblaApi) return
     const onSelect = () => setSelected(emblaApi.selectedScrollSnap())
     emblaApi.on('select', onSelect)
     return () => emblaApi.off('select', onSelect)
-  }, [emblaApi])
-
-  // Blur the page and show the index names as a dial only while the
-  // pointer is down (touch drag, or wheel gestures which emulate one);
-  // it hides the moment the pointer lifts.
-  useEffect(() => {
-    if (!emblaApi) return
-    // Hold on each index, then tick to the next. HOLD is the fraction of
-    // the way to the neighboring page the name stays pinned on each side;
-    // the remaining middle span is a quick smoothstep transition.
-    const HOLD = 0.2
-    const detent = (p) => {
-      const page = Math.floor(p)
-      const t = p - page
-      const u = Math.min(Math.max((t - HOLD) / (1 - 2 * HOLD), 0), 1)
-      return page + u * u * (3 - 2 * u)
-    }
-    const raw = () => emblaApi.scrollProgress() * (pages.length - 1)
-    const position = () => detent(raw())
-    // Don't show on mere touch — wait until the carousel has actually
-    // moved this many pages from where the finger went down.
-    const SHOW_THRESHOLD = 0.1
-    let downPosition = null
-    const onPointerDown = () => {
-      downPosition = raw()
-    }
-    const onPointerUp = () => {
-      downPosition = null
-      setDial((d) => ({ ...d, visible: false }))
-    }
-    const onScroll = () => {
-      if (downPosition === null) return
-      const moved = Math.abs(raw() - downPosition) > SHOW_THRESHOLD
-      setDial((d) =>
-        d.visible || moved ? { visible: true, position: position() } : d
-      )
-    }
-    emblaApi.on('pointerDown', onPointerDown)
-    emblaApi.on('pointerUp', onPointerUp)
-    emblaApi.on('scroll', onScroll)
-    return () => {
-      emblaApi.off('pointerDown', onPointerDown)
-      emblaApi.off('pointerUp', onPointerUp)
-      emblaApi.off('scroll', onScroll)
-    }
-  }, [emblaApi])
-
-  // Amplify drag distance so flipping pages feels like spinning a dial:
-  // every finger-move while the pointer is down is scaled by this factor
-  // (clamped at the first/last page so it can't overshoot the bounds).
-  useEffect(() => {
-    if (!emblaApi) return
-    const DRAG_MULTIPLIER = 10
-    const engine = emblaApi.internalEngine()
-    let prev = null
-    const onPointerDown = () => {
-      prev = engine.location.get()
-    }
-    const onPointerUp = () => {
-      prev = null
-    }
-    const onScroll = () => {
-      if (prev === null || !engine.dragHandler.pointerDown()) return
-      const current = engine.location.get()
-      const boosted = engine.limit.constrain(
-        prev + (current - prev) * DRAG_MULTIPLIER
-      )
-      const extra = boosted - current
-      if (extra !== 0) {
-        engine.location.add(extra)
-        engine.target.add(extra)
-        engine.offsetLocation.set(engine.location.get())
-        engine.translate.to(engine.offsetLocation.get())
-      }
-      prev = engine.location.get()
-    }
-    emblaApi.on('pointerDown', onPointerDown)
-    emblaApi.on('pointerUp', onPointerUp)
-    emblaApi.on('scroll', onScroll)
-    return () => {
-      emblaApi.off('pointerDown', onPointerDown)
-      emblaApi.off('pointerUp', onPointerUp)
-      emblaApi.off('scroll', onScroll)
-    }
   }, [emblaApi])
 
   // One mouse-wheel gesture flips exactly one page. Events arriving in
@@ -155,33 +73,7 @@ function App() {
           />
         ))}
       </nav>
-      <div
-        className={`page-dial${dial.visible ? ' page-dial--visible' : ''}`}
-        aria-hidden="true"
-      >
-        <div
-          className="page-dial__track"
-          style={{
-            transform: `translateY(calc((${(pages.length - 1) / 2} - ${dial.position}) * var(--dial-step)))`,
-          }}
-        >
-          {pages.map((page, i) => {
-            const distance = Math.min(Math.abs(i - dial.position), 2)
-            return (
-              <span
-                key={page.name}
-                className="page-dial__item"
-                style={{
-                  opacity: 1 - distance * 0.4,
-                  transform: `scale(${1 - distance * 0.2})`,
-                }}
-              >
-                {page.name}
-              </span>
-            )
-          })}
-        </div>
-      </div>
+      <DialOverlay names={pages.map((page) => page.name)} dial={dial} />
     </div>
   )
 }

@@ -43,22 +43,6 @@
   gap: 0.5rem;
 }
 
-.page-nav button {
-  width: 0.7rem;
-  height: 0.7rem;
-  padding: 0;
-  border: 1px solid #999;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.02s ease, border-color 0.02s ease;
-}
-
-.page-nav button.active {
-  background: #222;
-  border-color: #222;
-}
-
 /* Dial overlay — blurs the page while scrolling and shows the index
    names tracking the scroll position, like a picker wheel. */
 .page-dial {
@@ -94,14 +78,36 @@
   color: #222;
 }
 
-/* Horizontal carousels inside pages — fill the whole page slide */
+/* Horizontal variant — names run along the bottom of the screen */
+.page-dial--h {
+  --dial-step: 12rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0 0 4rem;
+}
+
+.page-dial--h .page-dial__track {
+  display: flex;
+}
+
+.page-dial--h .page-dial__item {
+  width: var(--dial-step);
+  height: auto;
+  line-height: 1.2;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* Horizontal carousels inside pages — bleed to the full page slide,
+   cancelling the slide's 2rem padding on the sides and bottom */
 .embla-h {
   flex: 1;
   min-height: 0;
-  width: 100%;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
-  margin-top: 1.5rem;
+  margin: 1.5rem -2rem -2rem;
 }
 
 .embla-h__viewport {
@@ -134,20 +140,29 @@
   max-width: 40rem;
 }
 
-.embla-h__buttons {
+.embla-h__dots {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-  margin-top: 0.75rem;
+  margin: 0.75rem 0;
 }
 
-.embla-h__buttons button {
-  font: inherit;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
+.embla-h__dots button,
+.page-nav button {
+  width: 0.7rem;
+  height: 0.7rem;
+  padding: 0;
+  border: 1px solid #999;
+  border-radius: 50%;
+  background: transparent;
   cursor: pointer;
+  transition: background 0.02s ease, border-color 0.02s ease;
+}
+
+.embla-h__dots button.active,
+.page-nav button.active {
+  background: #222;
+  border-color: #222;
 }
 
 /* Contact form */

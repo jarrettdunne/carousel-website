@@ -2,7 +2,7 @@
 export const DRAG_MULTIPLIER = 10
 // Fraction of the way to the neighboring index the dial stays pinned on
 // each side; the remaining middle span is a quick smoothstep transition.
-const HOLD = 0.3
+const HOLD = 0.45
 // Don't show the dial on mere touch — wait until the carousel has moved
 // this many indices from where the finger went down.
 export const SHOW_THRESHOLD = 0.1

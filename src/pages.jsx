@@ -28,6 +28,18 @@ const portfolioSlides = [
 
 export const pages = [
   {
+    name: 'Welcome',
+    dial: '\u2022',
+    content: (
+      <>
+        <p className="landing-kicker">Lorem ipsum dolor</p>
+        <h1 className="landing-title">Sit Amet Consectetur</h1>
+        <p>{lorem.short}</p>
+        <p className="landing-hint">Scroll to explore \u2193</p>
+      </>
+    ),
+  },
+  {
     name: 'Home',
     content: (
       <>

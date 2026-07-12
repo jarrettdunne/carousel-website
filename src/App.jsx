@@ -73,7 +73,10 @@ function App() {
           />
         ))}
       </nav>
-      <DialOverlay names={pages.map((page) => page.name)} dial={dial} />
+      <DialOverlay
+        names={pages.map((page) => page.dial ?? page.name)}
+        dial={dial}
+      />
     </div>
   )
 }

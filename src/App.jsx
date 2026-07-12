@@ -17,6 +17,48 @@ function App() {
     return () => emblaApi.off('select', onSelect)
   }, [emblaApi])
 
+  // Embla ignores drags that start on form fields, so vertical swipes
+  // beginning on an input/textarea flip the page via this handler instead.
+  useEffect(() => {
+    if (!emblaApi) return
+    const root = emblaApi.rootNode()
+    let startX = 0
+    let startY = 0
+    let tracking = false
+    let fired = false
+
+    const onTouchStart = (e) => {
+      if (!e.target.closest('input, textarea, select')) return
+      tracking = true
+      fired = false
+      startX = e.touches[0].clientX
+      startY = e.touches[0].clientY
+    }
+    const onTouchMove = (e) => {
+      if (!tracking || fired) return
+      const dx = e.touches[0].clientX - startX
+      const dy = e.touches[0].clientY - startY
+      if (Math.abs(dy) > 30 && Math.abs(dy) > Math.abs(dx)) {
+        fired = true
+        document.activeElement?.blur()
+        if (dy < 0) emblaApi.scrollNext()
+        else emblaApi.scrollPrev()
+      }
+    }
+    const onTouchEnd = () => {
+      tracking = false
+    }
+
+    root.addEventListener('touchstart', onTouchStart, { passive: true })
+    root.addEventListener('touchmove', onTouchMove, { passive: true })
+    root.addEventListener('touchend', onTouchEnd, { passive: true })
+    return () => {
+      root.removeEventListener('touchstart', onTouchStart)
+      root.removeEventListener('touchmove', onTouchMove)
+      root.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [emblaApi])
+
   const scrollTo = useCallback(
     (index) => emblaApi && emblaApi.scrollTo(index),
     [emblaApi]

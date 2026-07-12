@@ -24,13 +24,17 @@ function DialOverlay({ names, dial, horizontal = false }) {
       >
         {names.map((name, i) => {
           const distance = Math.min(Math.abs(i - dial.position), 2)
+          // Horizontal steps are tighter, so recede neighbors harder to
+          // keep long titles from colliding with the enlarged one.
+          const fade = horizontal ? 0.45 : 0.4
+          const shrink = horizontal ? 0.35 : 0.2
           return (
             <span
               key={name}
               className="page-dial__item"
               style={{
-                opacity: 1 - distance * 0.4,
-                transform: `scale(${1 - distance * 0.2})`,
+                opacity: 1 - distance * fade,
+                transform: `scale(${1 - distance * shrink})`,
               }}
             >
               {name}

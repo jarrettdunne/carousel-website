@@ -136,6 +136,8 @@
 .contact-form input,
 .contact-form textarea {
   font: inherit;
+  /* >=16px so iOS Safari doesn't zoom the page when a field gets focus */
+  font-size: 1rem;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;

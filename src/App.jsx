@@ -1,19 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import DialOverlay from './components/DialOverlay'
-import { useDialScroll, detent } from './useDialScroll'
+import { useDialGesture } from './useDialGesture'
+import { detent } from './dialTuning'
 import { entryForSlide } from './dialRegistry'
-import { useHorizontalDialGesture } from './useHorizontalDialGesture'
 import { pages } from './pages'
 import './App.css'
 
 function App() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', skipSnaps: true })
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', watchDrag: false })
   const [selected, setSelected] = useState(0)
-  const dial = useDialScroll(emblaApi, pages.length)
-  const vEngagedRef = useRef(false)
-  vEngagedRef.current = dial.visible
-  const hDial = useHorizontalDialGesture(emblaApi, vEngagedRef)
+  const { vDial, hDial } = useDialGesture(emblaApi)
 
   useEffect(() => {
     if (!emblaApi) return
@@ -92,8 +89,8 @@ function App() {
           return row
         })}
         dial={{
-          visible: dial.visible || hDial.visible,
-          position: dial.visible ? dial.position : selected,
+          visible: vDial.visible || hDial.visible,
+          position: vDial.visible ? vDial.position : selected,
         }}
       />
     </div>

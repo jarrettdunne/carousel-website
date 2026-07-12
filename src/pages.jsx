@@ -11,19 +11,18 @@ const lorem = {
 
 const aboutSlides = [
   { title: 'About', text: lorem.short, intro: true },
-  { title: 'Who We Are', text: lorem.short },
-  { title: 'Our Story', text: lorem.medium },
-  { title: 'Our Values', text: lorem.long },
-  { title: 'The Team', text: lorem.short },
+  { title: 'Story', text: lorem.medium },
+  { title: 'Values', text: lorem.long },
+  { title: 'Team', text: lorem.short },
 ]
 
 const portfolioSlides = [
   { title: 'Portfolio', text: lorem.short, intro: true },
-  { title: 'Project One', text: lorem.short },
-  { title: 'Project Two', text: lorem.medium },
-  { title: 'Project Three', text: lorem.long },
-  { title: 'Project Four', text: lorem.medium },
-  { title: 'Project Five', text: lorem.short },
+  { title: 'One', text: lorem.short },
+  { title: 'Two', text: lorem.medium },
+  { title: 'Three', text: lorem.long },
+  { title: 'Four', text: lorem.medium },
+  { title: 'Five', text: lorem.short },
 ]
 
 export const pages = [

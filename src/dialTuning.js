@@ -11,6 +11,15 @@ export const SHOW_THRESHOLD = 0.1
 export function detent(p) {
   const page = Math.floor(p)
   const t = p - page
-  const u = Math.min(Math.max((t - HOLD) / (1 - 2 * HOLD), 0), 1)
+  const span = 1 - 2 * HOLD
+  // A HOLD of 0.5 leaves no transition span; round instead of dividing
+  // by zero (t exactly at HOLD would yield NaN, and a NaN position
+  // leaves stale, half-clipped transforms on the dial strips).
+  const u =
+    span > 0
+      ? Math.min(Math.max((t - HOLD) / span, 0), 1)
+      : t < 0.5
+        ? 0
+        : 1
   return page + u * u * (3 - 2 * u)
 }

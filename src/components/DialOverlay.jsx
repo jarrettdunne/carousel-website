@@ -14,13 +14,16 @@ function Strip({ prefix, prefixTail, names, position }) {
   const ref = useRef(null)
   const shiftRef = useRef(null)
   const prefixRef = useRef(null)
-  const t = Math.min(Math.max(position, 0), 1)
+  // Guard against a non-finite position: NaN would write invalid
+  // transforms that leave the strip stuck half-clipped.
+  const safe = Number.isFinite(position) ? position : 0
+  const t = Math.min(Math.max(safe, 0), 1)
   useLayoutEffect(() => {
     const el = ref.current
     if (el && el.children.length) {
       const lefts = Array.from(el.children).map((item) => item.offsetLeft)
       const max = lefts.length - 1
-      const clamped = Math.min(Math.max(position, 0), max)
+      const clamped = Math.min(Math.max(safe, 0), max)
       const i = Math.floor(clamped)
       const j = Math.min(i + 1, max)
       const left = lefts[i] + (lefts[j] - lefts[i]) * (clamped - i)
@@ -50,7 +53,7 @@ function Strip({ prefix, prefixTail, names, position }) {
       <span className="page-dial__strip-window">
         <span className="page-dial__strip" ref={ref}>
           {names.map((name, k) => {
-            const d = Math.min(Math.max(k - position, 0), 2)
+            const d = Math.min(Math.max(k - safe, 0), 2)
             return (
               <span
                 key={k}

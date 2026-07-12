@@ -30,12 +30,26 @@ function App() {
       const u = Math.min(Math.max((t - HOLD) / (1 - 2 * HOLD), 0), 1)
       return page + u * u * (3 - 2 * u)
     }
-    const position = () =>
-      detent(emblaApi.scrollProgress() * (pages.length - 1))
-    const onPointerDown = () => setDial({ visible: true, position: position() })
-    const onPointerUp = () => setDial((d) => ({ ...d, visible: false }))
-    const onScroll = () =>
-      setDial((d) => (d.visible ? { visible: true, position: position() } : d))
+    const raw = () => emblaApi.scrollProgress() * (pages.length - 1)
+    const position = () => detent(raw())
+    // Don't show on mere touch — wait until the carousel has actually
+    // moved this many pages from where the finger went down.
+    const SHOW_THRESHOLD = 0.1
+    let downPosition = null
+    const onPointerDown = () => {
+      downPosition = raw()
+    }
+    const onPointerUp = () => {
+      downPosition = null
+      setDial((d) => ({ ...d, visible: false }))
+    }
+    const onScroll = () => {
+      if (downPosition === null) return
+      const moved = Math.abs(raw() - downPosition) > SHOW_THRESHOLD
+      setDial((d) =>
+        d.visible || moved ? { visible: true, position: position() } : d
+      )
+    }
     emblaApi.on('pointerDown', onPointerDown)
     emblaApi.on('pointerUp', onPointerUp)
     emblaApi.on('scroll', onScroll)

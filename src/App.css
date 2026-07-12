@@ -114,7 +114,7 @@
 }
 
 .page-dial__strip {
-  --dial-gap-h: 1.5rem;
+  --dial-gap-h: 1rem;
   position: absolute;
   left: 0;
   top: 0;

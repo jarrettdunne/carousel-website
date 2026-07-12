@@ -14,4 +14,6 @@ body {
   line-height: 1.5;
   color: #222;
   background: #fff;
+  /* stop pull-to-refresh and scroll chaining on mobile */
+  overscroll-behavior: none;
 }

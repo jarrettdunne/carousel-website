@@ -13,6 +13,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  /* vertical swipes are handled by Embla, not the browser */
+  touch-action: pan-x pinch-zoom;
 }
 
 .embla-v__slide {
@@ -76,6 +78,8 @@
 .embla-h__container {
   display: flex;
   height: 100%;
+  /* horizontal swipes are handled by Embla, not the browser */
+  touch-action: pan-y pinch-zoom;
 }
 
 .embla-h__slide {

@@ -9,12 +9,33 @@ function App() {
     WheelGesturesPlugin(),
   ])
   const [selected, setSelected] = useState(0)
+  const [dial, setDial] = useState({ visible: false, position: 0 })
 
   useEffect(() => {
     if (!emblaApi) return
     const onSelect = () => setSelected(emblaApi.selectedScrollSnap())
     emblaApi.on('select', onSelect)
     return () => emblaApi.off('select', onSelect)
+  }, [emblaApi])
+
+  // Blur the page and show the index names as a dial only while the
+  // pointer is down (touch drag, or wheel gestures which emulate one);
+  // it hides the moment the pointer lifts.
+  useEffect(() => {
+    if (!emblaApi) return
+    const position = () => emblaApi.scrollProgress() * (pages.length - 1)
+    const onPointerDown = () => setDial({ visible: true, position: position() })
+    const onPointerUp = () => setDial((d) => ({ ...d, visible: false }))
+    const onScroll = () =>
+      setDial((d) => (d.visible ? { visible: true, position: position() } : d))
+    emblaApi.on('pointerDown', onPointerDown)
+    emblaApi.on('pointerUp', onPointerUp)
+    emblaApi.on('scroll', onScroll)
+    return () => {
+      emblaApi.off('pointerDown', onPointerDown)
+      emblaApi.off('pointerUp', onPointerUp)
+      emblaApi.off('scroll', onScroll)
+    }
   }, [emblaApi])
 
   // Embla ignores drags that start on form fields, so vertical swipes
@@ -81,11 +102,38 @@ function App() {
             key={page.name}
             className={i === selected ? 'active' : ''}
             onClick={() => scrollTo(i)}
-          >
-            {page.name}
-          </button>
+            aria-label={page.name}
+            aria-current={i === selected ? 'page' : undefined}
+          />
         ))}
       </nav>
+      <div
+        className={`page-dial${dial.visible ? ' page-dial--visible' : ''}`}
+        aria-hidden="true"
+      >
+        <div
+          className="page-dial__track"
+          style={{
+            transform: `translateY(calc((${(pages.length - 1) / 2} - ${dial.position}) * var(--dial-step)))`,
+          }}
+        >
+          {pages.map((page, i) => {
+            const distance = Math.min(Math.abs(i - dial.position), 2)
+            return (
+              <span
+                key={page.name}
+                className="page-dial__item"
+                style={{
+                  opacity: 1 - distance * 0.4,
+                  transform: `scale(${1 - distance * 0.2})`,
+                }}
+              >
+                {page.name}
+              </span>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

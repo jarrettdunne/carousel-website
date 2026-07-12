@@ -32,6 +32,27 @@
   max-width: 40rem;
 }
 
+/* Landing page */
+.landing-kicker {
+  margin: 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #888;
+}
+
+.landing-title {
+  margin: 0.5rem 0 1rem;
+  font-size: 3.5rem;
+  line-height: 1.1;
+}
+
+.landing-hint {
+  margin-top: 2.5rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
 /* Page nav (fixed on the right) */
 .page-nav {
   position: fixed;

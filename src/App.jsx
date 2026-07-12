@@ -20,7 +20,18 @@ function App() {
   // it hides the moment the pointer lifts.
   useEffect(() => {
     if (!emblaApi) return
-    const position = () => emblaApi.scrollProgress() * (pages.length - 1)
+    // Hold on each index, then tick to the next. HOLD is the fraction of
+    // the way to the neighboring page the name stays pinned on each side;
+    // the remaining middle span is a quick smoothstep transition.
+    const HOLD = 0.2
+    const detent = (p) => {
+      const page = Math.floor(p)
+      const t = p - page
+      const u = Math.min(Math.max((t - HOLD) / (1 - 2 * HOLD), 0), 1)
+      return page + u * u * (3 - 2 * u)
+    }
+    const position = () =>
+      detent(emblaApi.scrollProgress() * (pages.length - 1))
     const onPointerDown = () => setDial({ visible: true, position: position() })
     const onPointerUp = () => setDial((d) => ({ ...d, visible: false }))
     const onScroll = () =>

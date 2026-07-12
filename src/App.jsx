@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { pages } from './pages'
 import './App.css'
 
 function App() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', skipSnaps: true }, [
-    WheelGesturesPlugin(),
-  ])
+  const [emblaRef, emblaApi] = useEmblaCarousel({ axis: 'y', skipSnaps: true })
   const [selected, setSelected] = useState(0)
   const [dial, setDial] = useState({ visible: false, position: 0 })
 
@@ -85,7 +82,7 @@ function App() {
   // (clamped at the first/last page so it can't overshoot the bounds).
   useEffect(() => {
     if (!emblaApi) return
-    const DRAG_MULTIPLIER = 2.5
+    const DRAG_MULTIPLIER = 4
     const engine = emblaApi.internalEngine()
     let prev = null
     const onPointerDown = () => {
@@ -117,6 +114,35 @@ function App() {
       emblaApi.off('pointerUp', onPointerUp)
       emblaApi.off('scroll', onScroll)
     }
+  }, [emblaApi])
+
+  // One mouse-wheel gesture flips exactly one page. Events arriving in
+  // quick succession (fast wheel spins, trackpad inertia) count as the
+  // same gesture and keep extending the lock instead of flipping again.
+  useEffect(() => {
+    if (!emblaApi) return
+    const root = emblaApi.rootNode()
+    let lockUntil = 0
+    let lastEvent = 0
+    let acc = 0
+    const onWheel = (e) => {
+      e.preventDefault()
+      const now = Date.now()
+      if (now - lastEvent > 250) acc = 0
+      lastEvent = now
+      if (now < lockUntil) {
+        lockUntil = now + 250
+        return
+      }
+      acc += e.deltaY
+      if (Math.abs(acc) < 10) return
+      if (acc > 0) emblaApi.scrollNext()
+      else emblaApi.scrollPrev()
+      acc = 0
+      lockUntil = now + 250
+    }
+    root.addEventListener('wheel', onWheel, { passive: false })
+    return () => root.removeEventListener('wheel', onWheel)
   }, [emblaApi])
 
   const scrollTo = useCallback(

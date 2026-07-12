@@ -82,7 +82,7 @@ function App() {
   // (clamped at the first/last page so it can't overshoot the bounds).
   useEffect(() => {
     if (!emblaApi) return
-    const DRAG_MULTIPLIER = 6
+    const DRAG_MULTIPLIER = 10
     const engine = emblaApi.internalEngine()
     let prev = null
     const onPointerDown = () => {

@@ -28,32 +28,63 @@
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  text-align: center;
+  text-align: left;
 }
 
-.embla-v__slide p {
+/* Text children share one centered 40rem column so headings, kickers,
+   and paragraphs sit on a common left edge. */
+.embla-v__slide h1,
+.embla-v__slide p,
+.embla-h__slide h1,
+.embla-h__slide h3,
+.embla-h__slide p {
+  width: 100%;
   max-width: 40rem;
 }
 
-/* Landing page */
-.landing-kicker {
-  margin: 0;
-  font-size: 0.9rem;
+/* Small labels above headings and the services line; the only styled
+   text besides the logo, kept quiet. */
+.slide-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: #888;
+  letter-spacing: 0.2em;
+  color: #999;
 }
 
-.landing-title {
-  margin: 0.5rem 0 1rem;
-  font-size: 3.5rem;
-  line-height: 1.1;
+.services-line {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+}
+
+/* Landing page */
+.landing-monogram {
+  display: block;
+  width: 6.5rem;
+  height: auto;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+}
+
+.landing-wordmark {
+  display: block;
+  width: min(96vw, 72rem);
+  height: auto;
+  /* three stacked lines get tall; scale down inside short viewports,
+     leaving room for the monogram above */
+  max-height: 55svh;
+  color: var(--ink);
 }
 
 .landing-hint {
   margin-top: 2.5rem;
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 0.85rem;
+  color: #999;
+  /* stays centered under the wordmark */
+  text-align: center;
 }
 
 /* Page nav (fixed on the right) */
@@ -100,12 +131,14 @@
   font-size: 2rem;
   font-weight: 600;
   text-align: center;
-  color: #222;
+  color: var(--ink);
 }
 
 /* A page row holding its horizontal carousel's titles as an inline dial:
-   the row is a zero-width anchor at screen center and the strip fans out
-   from it, offset so the current title sits exactly on the center line. */
+   the row is a zero-width anchor at screen center. The prefix hangs off
+   the anchor's left and stays put; the names scroll through a clipped
+   window on its right, so letters passing the anchor disappear under
+   the prefix's edge. */
 .page-dial__item--strip {
   width: 0;
   margin: 0 auto;
@@ -113,19 +146,69 @@
   overflow: visible;
 }
 
-.page-dial__strip {
-  --dial-gap-h: 1rem;
+/* Carries the intro centering: translated right by half the prefix's
+   width on the intro item (so the prefix sits centered on the anchor)
+   and back to zero as the dial leaves it. Being transformed, it is also
+   the containing block for the prefix and window. */
+.page-dial__strip-shift {
+  display: block;
+  position: relative;
+  height: 100%;
+}
+
+.page-dial__strip-prefix {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  white-space: nowrap;
+}
+
+/* The optional trailing letters of the prefix ("Project[s]") — width and
+   opacity are driven inline, collapsing as the dial leaves the intro. */
+.page-dial__strip-tail {
+  display: inline-block;
+  overflow: hidden;
+  white-space: pre;
+  /* an inline-block with overflow hidden baselines at its bottom edge,
+     which would push the prefix's baseline down and float the tail up;
+     aligning the tops keeps both on the same line */
+  vertical-align: top;
+}
+
+.page-dial__strip-window {
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
+  width: 50vw;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 3rem),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 3rem),
+    transparent
+  );
+}
+
+.page-dial__strip {
+  --dial-gap-h: 1rem;
+  height: 100%;
+  /* word space between the fixed prefix and the focused name */
+  padding-left: 0.45em;
   display: flex;
   gap: var(--dial-gap-h);
   white-space: nowrap;
 }
 
 .page-dial__strip-item {
-  text-align: center;
+  transform-origin: left center;
 }
 
 /* Horizontal carousels inside pages — the page's only content, bleeding
@@ -163,10 +246,6 @@
   margin-right: 1rem;
 }
 
-.embla-h__slide p {
-  max-width: 40rem;
-}
-
 .embla-h__dots {
   display: none;
   gap: 0.5rem;
@@ -176,10 +255,10 @@
 
 .embla-h__dots button,
 .page-nav button {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.5rem;
+  height: 0.5rem;
   padding: 0;
-  border: 1px solid #999;
+  border: 1px solid #bbb;
   border-radius: 50%;
   background: transparent;
   cursor: pointer;
@@ -188,14 +267,14 @@
 
 .embla-h__dots button.active,
 .page-nav button.active {
-  background: #222;
-  border-color: #222;
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 /* Contact form */
 .contact-form {
   width: 100%;
-  max-width: 26rem;
+  max-width: 40rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -207,7 +286,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
 }
 
 .contact-form input,
@@ -217,18 +297,35 @@
   font: inherit;
   /* >=16px so iOS Safari doesn't zoom the page when a field gets focus */
   font-size: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  color: var(--ink);
+  padding: 0.5rem 0;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0;
+  background: transparent;
   resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
 }
 
 .contact-form button {
   font: inherit;
-  padding: 0.5rem;
-  border: 1px solid #222;
-  border-radius: 4px;
-  background: #222;
-  color: #fff;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.contact-form button:hover {
+  background: var(--ink);
+  color: var(--paper);
 }

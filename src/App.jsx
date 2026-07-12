@@ -82,7 +82,9 @@ function App() {
           if (entry) {
             const count = entry.emblaApi.scrollSnapList().length
             row.strip = {
-              names: entry.names,
+              names: entry.dial?.names ?? entry.names,
+              prefix: entry.dial?.prefix,
+              prefixTail: entry.dial?.prefixTail,
               position: detent(entry.emblaApi.scrollProgress() * (count - 1)),
             }
           }

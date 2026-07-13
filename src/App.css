@@ -81,6 +81,78 @@ p.services-line {
   color: var(--ink-soft);
 }
 
+/* Fact line under a slide title: year, deliverables, durations */
+p.slide-meta {
+  margin: -0.5rem 0 0.75rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #999;
+}
+
+/* Pull quotes on the Recognition page */
+.quote-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem 2.5rem;
+  width: 100%;
+  max-width: 40rem;
+  margin: 1.5rem 0 0;
+}
+
+.pull-quote {
+  margin: 0;
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.pull-quote footer {
+  margin-top: 0.35rem;
+  font-style: normal;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #999;
+}
+
+/* Credit lists: the team roster and the recognition honors share one
+   name-over-small-caps-detail pattern. */
+.credit-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem 2.5rem;
+  width: 100%;
+  max-width: 40rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.credit-list li {
+  display: flex;
+  flex-direction: column;
+}
+
+.credit-name {
+  font-size: 0.95rem;
+}
+
+.credit-role {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #999;
+}
+
+.credit-bio {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
 /* Line-drawn marks for the portfolio's fictional clients */
 .project-logo {
   display: block;
@@ -131,7 +203,7 @@ p.landing-hint {
 /* Dial overlay — blurs the page while scrolling and shows the index
    names tracking the scroll position, like a picker wheel. */
 .page-dial {
-  --dial-step: 3.5rem;
+  --dial-step: 2.75rem;
   position: fixed;
   inset: 0;
   z-index: 10;

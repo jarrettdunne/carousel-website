@@ -3,8 +3,12 @@ import HorizontalCarousel from './components/HorizontalCarousel'
 const aboutSlides = [
   {
     kicker: 'The House',
-    title: 'About',
-    text: 'Finer Actual Designs is a small studio devoted to identities, interfaces, and printed matter of unreasonable quality. We keep the roster short and the standards long.',
+    title: 'The Studio',
+    text: [
+      'Finer Actual Designs is a four-person studio working across brand, digital, and print. We take on a small number of commissions at a time and stay close to every detail, from the first sketch to the final production file.',
+      'The work is quiet by intention. A good identity does not raise its voice; it simply makes everything around it look considered. If you have something worth making carefully, we should talk.',
+    ],
+    services: 'Identity · Digital · Print · Packaging',
     intro: true,
   },
   {
@@ -15,12 +19,48 @@ const aboutSlides = [
   {
     kicker: 'What We Hold To',
     title: 'Values',
-    text: 'Craft over volume. We accept a handful of commissions each year so that each receives our complete attention. Clarity over cleverness. If a design requires explanation, it requires revision. Honesty over comfort. When the brief itself is the problem, we will say so, because polishing the wrong idea helps no one.',
+    text: 'Three commitments, kept in this order.',
+    people: [
+      {
+        name: 'Craft over volume',
+        bio: 'We accept a handful of commissions each year so that each receives our complete attention. The calendar is the first design tool.',
+      },
+      {
+        name: 'Clarity over cleverness',
+        bio: 'If a design requires explanation, it requires revision. The audience should never need the deck.',
+      },
+      {
+        name: 'Honesty over comfort',
+        bio: 'When the brief itself is the problem, we will say so, because polishing the wrong idea helps no one.',
+      },
+    ],
   },
   {
     kicker: 'Four Chairs',
     title: 'Team',
     text: 'We are four people: two designers, one engineer, and one strategist who keeps the rest of us honest. There are no account managers and no handoffs. The people you meet on the first day are the people doing the work on the last.',
+    people: [
+      {
+        name: 'Mara Ellingsen',
+        role: 'Design, Co-founder',
+        bio: 'Mara came up through editorial design in Oslo and still lays out a spread faster than anyone in the room. She leads identity work and keeps the studio type library, which outweighs the rest of the studio combined.',
+      },
+      {
+        name: 'Jonah Reyes',
+        role: 'Design, Co-founder',
+        bio: 'Jonah spent six years designing exhibitions before switching to screens, and it shows: his interfaces read like well-hung rooms. He co-founded the studio with Mara over a shared desk and a disagreement about grids that neither has conceded.',
+      },
+      {
+        name: 'Priya Raghunathan',
+        role: 'Engineering',
+        bio: 'Priya builds everything the studio ships, from single-page sites to full products. A recovering physicist, she holds animation to believable physics and reviews motion curves the way editors review sentences.',
+      },
+      {
+        name: 'Camille Strand',
+        role: 'Strategy',
+        bio: 'Camille ran brand strategy at agencies too large to name before going small on purpose. She writes the briefs, questions the briefs, and makes sure the work answers to something real. Clients meet her first and thank her last.',
+      },
+    ],
   },
   {
     kicker: 'The Practice',
@@ -108,45 +148,108 @@ const portfolioSlides = [
   {
     kicker: 'Selected Work',
     title: 'Projects',
-    text: 'A few recent commissions. Each began with a question worth answering; the design followed from there.',
+    text: "A few recent commissions. Each began with a question worth answering; the design followed from there. Several more live behind other people's launch dates; ask, and we may be able to show you.",
     intro: true,
   },
   {
     logo: logos.meridian,
     kicker: 'Identity & Web',
     title: 'Meridian',
+    meta: '2025 · Wordmark, grid system, site',
     text: 'A complete identity and web presence for a cartography startup. The wordmark, the grid, and the site itself all borrow from the discipline of charts: fixed bearings, honest scale, and no ornament that does not navigate.',
   },
   {
     logo: logos.hearth,
     kicker: 'Brand & Packaging',
     title: 'Hearth',
+    meta: '2024 · Mark, packaging, print',
     text: 'Brand and packaging for a ceramics studio in the Hudson Valley. We built the identity around the kiln itself: warm neutrals, imperfect edges, and a mark that shifts slightly with every print run, the way no two firings are alike.',
   },
   {
     logo: logos.ledger,
     kicker: 'Product Design',
     title: 'Ledger',
+    meta: '2024 · Product audit, UI system, type',
     text: 'An interface overhaul for a bookkeeping platform drowning in its own features. We cut the primary navigation from eleven items to four, rebuilt the data views around what accountants actually scan for, and drew a type system that keeps dense tables legible at a glance. Support tickets about finding things fell by half within a quarter.',
   },
   {
     logo: logos.aperture,
     kicker: 'Exhibition',
     title: 'Aperture',
+    meta: '2023 · Exhibition, catalogue, wayfinding',
     text: 'Exhibition design and catalogue for a photography retrospective. Two hundred images across four rooms, sequenced so the story built rather than blurred. We treated the floor plan as an edit, not a hang.',
   },
   {
     logo: logos.fieldnote,
     kicker: 'Naming & App',
     title: 'Fieldnote',
+    meta: '2023 · Name, identity, iOS app',
     text: 'Naming, identity, and app design for a birding journal that wanted to feel like a pocket notebook rather than a database. Ink lines, paper textures, and not a single notification.',
   },
   {
     logo: logos.solstice,
     kicker: 'Identity & Packaging',
     title: 'Solstice',
+    meta: '2022 · Identity, packaging, launch',
     text: 'Identity and packaging for a small perfume house. Two ideas carried everything: light at its longest, and restraint at its most fragrant. Blind emboss, cotton paper, and a bottle that reads as well on a shelf as it does in the hand.',
   },
+]
+
+const processSlides = [
+  {
+    kicker: 'How We Work',
+    title: 'Process',
+    text: [
+      'Every commission moves through five phases. The order never changes; the care taken in each is the point.',
+      'We run one project per designer at a time, so the calendar we quote is the calendar you get. A typical engagement runs ten to sixteen weeks from first letter to final files.',
+    ],
+    intro: true,
+  },
+  {
+    kicker: 'Phase One',
+    title: 'Enquiry',
+    meta: 'An hour, on us',
+    text: 'It starts with a letter, not a form. Tell us what you are making and why it matters. We reply within two business days, and the first conversation costs nothing but an hour. If we are not the right studio, we will say so and suggest who might be.',
+  },
+  {
+    kicker: 'Phase Two',
+    title: 'Brief',
+    meta: 'Two weeks, together',
+    text: 'We write the brief together and interrogate it until it stops moving. Budget, audience, appetite for risk: everything is on the table before anything is on the page. Most projects are won or lost here, which is why we refuse to hurry it.',
+  },
+  {
+    kicker: 'Phase Three',
+    title: 'Design',
+    meta: 'Four to six weeks',
+    text: 'Two or three directions, shown as real artifacts rather than mood boards: a cover, a homepage, a box. We present the thinking behind each and recommend one, with reasons you can repeat to your board.',
+  },
+  {
+    kicker: 'Phase Four',
+    title: 'Build',
+    meta: 'Four to eight weeks',
+    text: 'The chosen direction becomes the real thing: production files, a live site, a printed proof you can hold. Nothing ships that we have not used ourselves first.',
+  },
+  {
+    kicker: 'Phase Five',
+    title: 'Delivery',
+    meta: 'One week, then forever',
+    text: 'You receive the work, the sources, and a guide a future hire can follow without us. Then we stay reachable; small questions are answered for free, forever. Good identities are gardens, not monuments.',
+  },
+]
+
+const honors = [
+  {
+    name: 'National Design Annual',
+    detail: 'Identity of the Year shortlist, 2025 · Solstice',
+  },
+  {
+    name: 'Type Directors Club',
+    detail: 'Certificate of Typographic Excellence, 2024',
+  },
+  { name: 'The Brand Files', detail: 'Studio of the Month, March 2024' },
+  { name: 'AIGA 50/50', detail: 'Selected work, 2023 · Hearth' },
+  { name: 'Site Honors', detail: 'Site of the Day, 2023 · Meridian' },
+  { name: 'Print Regional Annual', detail: 'Two selections, 2022' },
 ]
 
 // Dial strips: the prefix sticks to the left of the dial anchor and the
@@ -171,6 +274,11 @@ const portfolioDial = {
     'Fieldnote',
     'Solstice',
   ],
+}
+
+const processDial = {
+  prefix: 'Process',
+  names: ['', 'Enquiry', 'Brief', 'Design', 'Build', 'Delivery'],
 }
 
 export const pages = [
@@ -246,31 +354,6 @@ export const pages = [
     ),
   },
   {
-    name: 'Home',
-    content: (
-      <>
-        <p className="slide-kicker">Est. 2019</p>
-        <h1>The Studio</h1>
-        <p>
-          Finer Actual Designs is a four-person studio working across brand,
-          digital, and print. We take on a small number of commissions at a
-          time and stay close to every detail, from the first sketch to the
-          final production file.
-        </p>
-        <p>
-          The work is quiet by intention. A good identity does not raise its
-          voice; it simply makes everything around it look considered. That is
-          the standard we hold every project to, whether it is a wordmark, an
-          interface, or a box that will be opened once and remembered.
-        </p>
-        <p>If you have something worth making carefully, we should talk.</p>
-        <p className="services-line">
-          Identity &middot; Digital &middot; Print &middot; Packaging
-        </p>
-      </>
-    ),
-  },
-  {
     name: 'About',
     content: <HorizontalCarousel slides={aboutSlides} dial={aboutDial} />,
   },
@@ -278,6 +361,90 @@ export const pages = [
     name: 'Portfolio',
     content: (
       <HorizontalCarousel slides={portfolioSlides} dial={portfolioDial} />
+    ),
+  },
+  {
+    name: 'Process',
+    content: <HorizontalCarousel slides={processSlides} dial={processDial} />,
+  },
+  {
+    name: 'Recognition',
+    content: (
+      <>
+        <p className="slide-kicker">Juries &amp; Journals</p>
+        <h1>Recognition</h1>
+        <p>
+          The work answers to clients first; occasionally juries and journals
+          answer too. A selection from recent years.
+        </p>
+        <ul className="credit-list">
+          {honors.map((honor) => (
+            <li key={honor.name}>
+              <span className="credit-name">{honor.name}</span>
+              <span className="credit-role">{honor.detail}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="quote-grid">
+          <blockquote className="pull-quote">
+            &ldquo;A studio that treats restraint as a feature, not a
+            compromise.&rdquo;
+            <footer>The Brand Files</footer>
+          </blockquote>
+          <blockquote className="pull-quote">
+            &ldquo;Proof that four people can out-craft forty.&rdquo;
+            <footer>National Design Annual jury</footer>
+          </blockquote>
+        </div>
+      </>
+    ),
+  },
+  {
+    name: 'Careers',
+    content: (
+      <>
+        <p className="slide-kicker">Four Chairs, Occasionally Five</p>
+        <h1>Careers</h1>
+        <p>
+          We hire rarely and slowly, which is exactly how we would want to be
+          hired. There are no open roles at the moment.
+        </p>
+        <p>
+          That said, we keep a short file of people we would like to work with
+          someday, and we read every letter that arrives. If the work here
+          feels like home, introduce yourself: show us three things you made
+          and one thing you learned.
+        </p>
+        <ul className="credit-list">
+          <li>
+            <span className="credit-name">Hours</span>
+            <span className="credit-bio">
+              Nine to five, kept with unusual seriousness. Craft does not
+              improve after dinner.
+            </span>
+          </li>
+          <li>
+            <span className="credit-name">Critique</span>
+            <span className="credit-bio">
+              Weekly, kind, and specific. The work gets questioned; the person
+              never does.
+            </span>
+          </li>
+          <li>
+            <span className="credit-name">Tools</span>
+            <span className="credit-bio">
+              Whatever the work asks for, from lead type to live code.
+            </span>
+          </li>
+          <li>
+            <span className="credit-name">Location</span>
+            <span className="credit-bio">
+              Hudson, New York, with two desks kept warm for remote weeks.
+            </span>
+          </li>
+        </ul>
+        <p>work@fineractualdesigns.studio</p>
+      </>
     ),
   },
   {
@@ -322,7 +489,10 @@ export const pages = [
           </label>
           <button type="submit">Send Enquiry</button>
         </form>
-        <p>hello@fineractualdesigns.studio &middot; +1 (555) 010-0100</p>
+        <p>
+          hello@fineractualdesigns.studio &middot; +1 (555) 010-0100 &middot;
+          214 Water Street, Hudson, New York
+        </p>
       </>
     ),
   },

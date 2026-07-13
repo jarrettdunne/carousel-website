@@ -34,7 +34,30 @@ function HorizontalCarousel({ slides, dial }) {
               {slide.logo}
               {slide.kicker && <p className="slide-kicker">{slide.kicker}</p>}
               {slide.intro ? <h1>{slide.title}</h1> : <h3>{slide.title}</h3>}
-              <p>{slide.text}</p>
+              {slide.meta && <p className="slide-meta">{slide.meta}</p>}
+              {(Array.isArray(slide.text) ? slide.text : [slide.text]).map(
+                (text, j) => (
+                  <p key={j}>{text}</p>
+                )
+              )}
+              {slide.services && (
+                <p className="services-line">{slide.services}</p>
+              )}
+              {slide.people && (
+                <ul className="credit-list">
+                  {slide.people.map((person) => (
+                    <li key={person.name}>
+                      <span className="credit-name">{person.name}</span>
+                      {person.role && (
+                        <span className="credit-role">{person.role}</span>
+                      )}
+                      {person.bio && (
+                        <span className="credit-bio">{person.bio}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
         </div>

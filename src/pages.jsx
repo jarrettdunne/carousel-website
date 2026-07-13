@@ -241,7 +241,7 @@ export const pages = [
             EST. 2019
           </text>
         </svg>
-        <p className="landing-hint">Scroll to explore</p>
+        <p className="landing-hint">Hold and drag to explore</p>
       </>
     ),
   },
@@ -285,7 +285,7 @@ export const pages = [
     content: (
       <>
         <p className="slide-kicker">Correspondence</p>
-        <h1>Enquiries</h1>
+        <h1>Inquiries</h1>
         <p>
           Tell us what you are making. We read everything and reply within two
           business days. The studio opens a small number of commissions each

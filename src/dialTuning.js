@@ -6,6 +6,10 @@ const HOLD = 0.3
 // Don't show the dial on mere touch — wait until the carousel has moved
 // this many indices from where the finger went down.
 export const SHOW_THRESHOLD = 0.1
+// A touchpad reports nothing while fingers rest on it (wheel events only
+// fire on movement), so a stationary hold is indistinguishable from a
+// lift. Hold the dial through this much quiet before settling and hiding.
+export const WHEEL_HOLD_MS = 1000
 
 // Hold on each index, then tick to the next.
 export function detent(p) {

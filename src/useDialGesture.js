@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 import { entryForSlide } from './dialRegistry'
-import { DRAG_MULTIPLIER, SHOW_THRESHOLD, detent } from './dialTuning'
+import {
+  DRAG_MULTIPLIER,
+  SHOW_THRESHOLD,
+  WHEEL_HOLD_MS,
+  detent,
+} from './dialTuning'
 
 // The combined dial gesture. Native Embla dragging is disabled on every
-// carousel; this hook tracks the touch itself and drives both axes
-// directly — vertical movement scrolls the page carousel, horizontal
-// movement scrolls the carousel on the page whose dial row is in focus.
+// carousel; this hook tracks the touch (or touchpad scroll) itself and
+// drives both axes directly — vertical movement scrolls the page
+// carousel, horizontal movement scrolls the carousel on the page whose
+// dial row is in focus.
 // Driving both manually means neither axis can lock the other out (Embla
 // abandons a drag whose first movement is cross-axis). On release every
 // touched carousel snaps to its nearest index.
@@ -66,11 +72,7 @@ export function useDialGesture(emblaApi) {
     let active = null
     const driven = new Set()
 
-    const onPointerDown = (e) => {
-      if (!e.isPrimary) return
-      // leave form fields and buttons to their own devices
-      if (e.target.closest('input, textarea, select, button')) return
-      last = { x: e.clientX, y: e.clientY }
+    const begin = () => {
       raw.clear()
       vStart = positionOf(emblaApi)
       vShown = false
@@ -79,12 +81,16 @@ export function useDialGesture(emblaApi) {
       driven.clear()
     }
 
-    const onPointerMove = (e) => {
-      if (!e.isPrimary || !last) return
-      const dx = e.clientX - last.x
-      const dy = e.clientY - last.y
-      last = { x: e.clientX, y: e.clientY }
+    const finish = () => {
+      driven.forEach(settle)
+      driven.clear()
+      raw.clear()
+      active = null
+      setVDial((d) => ({ ...d, visible: false }))
+      setHDial((d) => ({ ...d, visible: false }))
+    }
 
+    const move = (dx, dy) => {
       if (dy !== 0) {
         drive(emblaApi, dy)
         driven.add(emblaApi)
@@ -110,26 +116,101 @@ export function useDialGesture(emblaApi) {
       }
     }
 
+    const onPointerDown = (e) => {
+      if (!e.isPrimary) return
+      // leave form fields and buttons to their own devices
+      if (e.target.closest('input, textarea, select, button')) return
+      // a touch takes over from a still-holding wheel gesture
+      clearTimeout(wheelTimer)
+      wheelMode = null
+      last = { x: e.clientX, y: e.clientY }
+      begin()
+    }
+
+    const onPointerMove = (e) => {
+      if (!e.isPrimary || !last) return
+      const dx = e.clientX - last.x
+      const dy = e.clientY - last.y
+      last = { x: e.clientX, y: e.clientY }
+      move(dx, dy)
+    }
+
     const onPointerUp = (e) => {
       if (!e.isPrimary || !last) return
       last = null
-      driven.forEach(settle)
-      driven.clear()
-      raw.clear()
-      active = null
-      setVDial((d) => ({ ...d, visible: false }))
-      setHDial((d) => ({ ...d, visible: false }))
+      finish()
+    }
+
+    // Touchpad two-finger scrolling runs the same gesture as a drag:
+    // wheel deltas feed both detented axes. Wheel has no pointerup — and
+    // fingers resting motionless on the pad produce no events at all —
+    // so the gesture holds through WHEEL_HOLD_MS of quiet before it
+    // settles and the dial hides. Discrete mouse wheels are told apart
+    // by their large, vertical-only notches and keep the
+    // one-notch-one-page behavior; a gesture holds whichever mode it
+    // started in until it goes quiet.
+    let wheelMode = null
+    let wheelTimer = 0
+    let wheelAcc = 0
+    let wheelLockUntil = 0
+
+    const endWheel = () => {
+      wheelTimer = 0
+      if (wheelMode === 'drag') finish()
+      wheelMode = null
+    }
+
+    const onWheel = (e) => {
+      e.preventDefault()
+      if (last) return
+      const now = Date.now()
+      if (!wheelMode) {
+        const discrete =
+          e.deltaMode !== 0 || (e.deltaX === 0 && Math.abs(e.deltaY) >= 50)
+        wheelMode = discrete ? 'page' : 'drag'
+        if (wheelMode === 'drag') begin()
+        wheelAcc = 0
+      }
+      clearTimeout(wheelTimer)
+      wheelTimer = setTimeout(
+        endWheel,
+        wheelMode === 'drag' ? WHEEL_HOLD_MS : 250
+      )
+
+      if (wheelMode === 'drag') {
+        // Wheel deltas point where the content should go, drag deltas
+        // where the finger went — opposite signs for the same motion.
+        move(-e.deltaX, -e.deltaY)
+        return
+      }
+
+      // One mouse-wheel gesture flips exactly one page. Events arriving
+      // in quick succession (fast wheel spins) count as the same gesture
+      // and keep extending the lock instead of flipping again.
+      if (now < wheelLockUntil) {
+        wheelLockUntil = now + 250
+        return
+      }
+      wheelAcc += e.deltaY
+      if (Math.abs(wheelAcc) < 10) return
+      if (wheelAcc > 0) emblaApi.scrollNext()
+      else emblaApi.scrollPrev()
+      wheelAcc = 0
+      wheelLockUntil = now + 250
     }
 
     root.addEventListener('pointerdown', onPointerDown)
     root.addEventListener('pointermove', onPointerMove)
     root.addEventListener('pointerup', onPointerUp)
     root.addEventListener('pointercancel', onPointerUp)
+    root.addEventListener('wheel', onWheel, { passive: false })
     return () => {
+      clearTimeout(wheelTimer)
       root.removeEventListener('pointerdown', onPointerDown)
       root.removeEventListener('pointermove', onPointerMove)
       root.removeEventListener('pointerup', onPointerUp)
       root.removeEventListener('pointercancel', onPointerUp)
+      root.removeEventListener('wheel', onWheel)
     }
   }, [emblaApi])
 
